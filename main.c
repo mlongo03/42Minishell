@@ -6,7 +6,7 @@
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 12:12:32 by mlongo            #+#    #+#             */
-/*   Updated: 2023/06/29 12:42:39 by mlongo           ###   ########.fr       */
+/*   Updated: 2023/06/30 15:11:49 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,38 +176,66 @@ void	parser(char **splitcmd)
 {
 	int i;
 	int expected_cmd_name;
+	int expected_cmd_arg;
 
 	i = 0;
 	expected_cmd_name = 1;
+	expected_cmd_arg = 0;
 	while (splitcmd[i])
 	{
-		if (i == 0 && !strcmp(splitcmd[i], "<"))
+		if (!strcmp(splitcmd[i], ")"))
+		{
+
+		}
+		if (!strcmp(splitcmd[i], "("))
+		{
+
+		}
+		else if (!strcmp(splitcmd[i], "<"))
 		{
 			printf("redirect_input file_input ");
 			i++;
-			expected_cmd_name = 1;
 		}
-		else if (cmd_name(splitcmd[i]) && expected_cmd_name)
+		else if (!strcmp(splitcmd[i], ">"))
+		{
+			printf("redirect_output_trunc file_output_trunc ");
+			i++;
+		}
+		else if (!strcmp(splitcmd[i], "<<"))
+		{
+			printf("here_doc delimiter ");
+			i++;
+		}
+		else if (!strcmp(splitcmd[i], ">>"))
+		{
+			printf("redirect_output_append file_output_append ");
+			i++;
+		}
+		else if (cmd_name(splitcmd[i]) && expected_cmd_name && !expected_cmd_arg)
 		{
 			printf("cmd_name ");
 			expected_cmd_name = 0;
+			expected_cmd_arg = 1;
 		}
-		else if (i != 0 && !strcmp(splitcmd[i], "&&"))
+		else if (i != 0 && !strcmp(splitcmd[i], "&&") && !expected_cmd_name)
 		{
 			printf("AND ");
 			expected_cmd_name = 1;
+			expected_cmd_arg = 0;
 		}
-		else if (i != 0 && !strcmp(splitcmd[i], "||"))
+		else if (i != 0 && !strcmp(splitcmd[i], "||") && !expected_cmd_name)
 		{
 			printf("OR ");
 			expected_cmd_name = 1;
+			expected_cmd_arg = 0;
 		}
-		else if (i != 0 && !strcmp(splitcmd[i], "|"))
+		else if (i != 0 && !strcmp(splitcmd[i], "|") && !expected_cmd_name)
 		{
 			printf("PIPE ");
 			expected_cmd_name = 1;
+			expected_cmd_arg = 0;
 		}
-		else if (!expected_cmd_name)
+		else if (!expected_cmd_name && expected_cmd_arg)
 			printf("cmd_arg ");
 		else
 		{
