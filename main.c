@@ -6,7 +6,7 @@
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 12:12:32 by mlongo            #+#    #+#             */
-/*   Updated: 2023/06/30 15:11:49 by mlongo           ###   ########.fr       */
+/*   Updated: 2023/06/30 19:25:37 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,23 @@ int	cmd_name(char *str)
 	return (0);
 }
 
+static int	ft_islower(int c)
+{
+	return (c >= 'a' && c <= 'z');
+}
+
+static int	ft_isupper(int c)
+{
+	return (c >= 'A' && c <= 'Z');
+}
+
+int	ft_isalpha(int c)
+{
+	if (ft_isupper(c) || ft_islower(c))
+		return (1);
+	return (0);
+}
+
 void	parser(char **splitcmd)
 {
 	int i;
@@ -183,13 +200,19 @@ void	parser(char **splitcmd)
 	expected_cmd_arg = 0;
 	while (splitcmd[i])
 	{
-		if (!strcmp(splitcmd[i], ")"))
+		if (strchr(splitcmd[i], '=') && ft_isalpha(splitcmd[i][0]))
+			printf("ENV_DECL ");
+		else if (strchr(splitcmd[i], '*'))
+			printf("WILDCARD ");
+		else if (splitcmd[i][0] == '$' && splitcmd[i][1] != ' ' && splitcmd[i][1] != 0)
+			printf("EXPANSION ");
+		else if (!strcmp(splitcmd[i], ")"))
+			printf("parenthesis_closed ");
+		else if (!strcmp(splitcmd[i], "("))
 		{
-
-		}
-		if (!strcmp(splitcmd[i], "("))
-		{
-
+			printf("parenthesys_open ");
+			expected_cmd_name = 1;
+			expected_cmd_arg = 0;
 		}
 		else if (!strcmp(splitcmd[i], "<"))
 		{
@@ -239,12 +262,100 @@ void	parser(char **splitcmd)
 			printf("cmd_arg ");
 		else
 		{
-			printf("minishell: %s: command not found\n", splitcmd[i]);
+			printf(" minishell: %s: command not found\n", splitcmd[i]);
 			return ;
 		}
 		i++;
 	}
 	printf("\n");
+}
+
+int	count_syntax(char *str)
+{
+	int	i;
+	int	count;
+
+	count = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i + 1] && ((str[i] == '|' && str[i + 1] == '|') || (str[i] == '&' && str[i + 1] == '&') || (str[i] == '<' && str[i + 1] == '<') || (str[i] == '>' && str[i + 1] == '>')))
+		{
+			if (i != 0 && str[i - 1] != ' ')
+				count++;
+			if (str[i + 2] && str[i + 2] != ' ')
+				count++;
+		}
+		else if (strchr("|()<>", str[i]))
+		{
+			if (i != 0 && str[i - 1] != ' ')
+				count++;
+			if (str[i + 1] && str[i + 1] != ' ')
+				count++;
+		}
+		i++;
+	}
+	return (i + count);
+}
+
+char	*fix_syntax(char *str)
+{
+	int		i;
+	int		j;
+	char	*res;
+
+	i = 0;
+	j = 0;
+	res = malloc(count_syntax(str));
+	while (str[i])
+	{
+		if (str[i + 1] && ((str[i] == '|' && str[i + 1] == '|') || (str[i] == '&' && str[i + 1] == '&')
+			|| (str[i] == '<' && str[i + 1] == '<') || (str[i] == '>' && str[i + 1] == '>')))
+		{
+			if ((i != 0 && str[i - 1] != ' ') && (str[i + 2] && str[i + 2] != ' '))
+			{
+				res[j++] = ' ';
+				res[j++] = str[i++];
+				res[j++] = str[i++];
+				res[j++] = ' ';
+			}
+			else if (i != 0 && str[i - 1] != ' ')
+			{
+				res[j++] = ' ';
+				res[j++] = str[i++];
+				res[j++] = str[i++];
+			}
+			else if (str[i + 2] && str[i + 2] != ' ')
+			{
+				res[j++] = str[i++];
+				res[j++] = str[i++];
+				res[j++] = ' ';
+			}
+		}
+		else if (strchr("|()<>", str[i]))
+		{
+			if ((i != 0 && str[i - 1] != ' ') && (str[i + 1] && str[i + 1] != ' '))
+			{
+				res[j++] = ' ';
+				res[j++] = str[i++];
+				res[j++] = ' ';
+			}
+			else if (i != 0 && str[i - 1] != ' ')
+			{
+				res[j++] = ' ';
+				res[j++] = str[i++];
+			}
+			else if (str[i + 1] && str[i + 1] != ' ')
+			{
+				res[j++] = ' ';
+				res[j++] = str[i++];
+			}
+		}
+		else
+			res[j++] = str[i++];
+	}
+	res[j] = 0;
+	return (res);
 }
 
 int main()
@@ -255,7 +366,7 @@ int main()
 	{
 		str = readline("minishell> ");
 		add_history(str);
-		splitcmd = ft_split(str, ' ');
+		splitcmd = ft_split(fix_syntax(str), ' ');
 		parser(splitcmd);
 		ft_free(splitcmd);
 		free(str);
