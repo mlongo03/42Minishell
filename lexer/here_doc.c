@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fcarlucc <fcarlucc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/09 15:54:01 by abuonomo          #+#    #+#             */
-/*   Updated: 2023/11/09 15:54:18 by abuonomo         ###   ########.fr       */
+/*   Created: 2023/11/11 16:18:49 by fcarlucc          #+#    #+#             */
+/*   Updated: 2023/11/11 17:15:20 by fcarlucc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,19 @@ t_list	*start_back(t_list *here_doc_lst)
 	return (here_doc_lst);
 }
 
+struct s_list	*get_here_doc(struct s_list **here_doc_lst)
+{
+	t_list	*res;
+
+	res = *here_doc_lst;
+	if ((*here_doc_lst)->next)
+		*here_doc_lst = (*here_doc_lst)->next;
+	return (res->content);
+}
+
 void	*handle_list_heredocs(int op)
 {
 	static t_list	*here_doc_lst;
-	t_list			*res;
 	char			*here_doc;
 
 	if (op == START)
@@ -40,20 +49,8 @@ void	*handle_list_heredocs(int op)
 	else if (op == LIST)
 		return (start_back(here_doc_lst));
 	else if (op == GET)
-	{
-		res = here_doc_lst;
-		if (here_doc_lst->next)
-			here_doc_lst = here_doc_lst->next;
-		return (res->content);
-	}
+		return (get_here_doc(&here_doc_lst));
 	return (NULL);
-}
-
-void	handle_here_doc_sig(int signum)
-{
-	(void)signum;
-	printf("\n");
-	exit(130);
 }
 
 int	reading(int fd, char *del, t_mini *mini)
@@ -100,29 +97,4 @@ void	handle_here_doc(char *del, t_mini *mini)
 	free(del);
 	g_last_exit_status_cmd = WEXITSTATUS(exit_status);
 	close(fd);
-}
-
-char	*create_del(char *s)
-{
-	char	quote;
-	int		i;
-
-	i = 0;
-	while (s[i] && !ft_isspace(s[i]))
-	{
-		if (s[i] == '"' || s[i] == '\'')
-		{
-			quote = s[i];
-			while (s[i] && s[i] != quote)
-				i++;
-			break ;
-		}
-		i++;
-	}
-	return (ft_substr(s, 0, i));
-}
-
-void	del(void *str)
-{
-	free(str);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 15:57:22 by abuonomo          #+#    #+#             */
-/*   Updated: 2023/11/09 12:14:19 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:05:08 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	jump_to_next(char *str)
 {
 	int	i;
-	int	x;
 
 	i = 0;
 	while (str[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 14:37:44 by mlongo            #+#    #+#             */
-/*   Updated: 2023/11/09 15:44:32 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:02:39 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,55 +26,49 @@ int	ft_isstrnum(char *str)
 	return (1);
 }
 
-int	ft_exit(char **args)
+void	exit_conditions(char **args, int exit_value, int len_args)
+{
+	if (ft_isstrnum(args[0]))
+	{
+		if (len_args == 1)
+		{
+			exit_value = ft_atoi(args[0]);
+			while (exit_value >= 256)
+				exit_value -= 256;
+			while (exit_value < 0)
+				exit_value += 256;
+			printf("exit\n");
+			free_exit(exit_value);
+		}
+		else
+		{
+			ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
+			g_last_exit_status_cmd = 1;
+		}
+	}
+	else
+	{
+		p_error("exit\nminishell: exit: ",
+			args[0], ": numeric argument required\n");
+		free_exit(2);
+	}
+}
+
+void	ft_exit(char **args)
 {
 	int	len_args;
 	int	exit_value;
 
 	len_args = 0;
+	exit_value = 0;
 	if (args)
 		while (args[len_args])
 			len_args++;
 	if (len_args == 0)
 	{
-		ft_free_all(var_container(NULL, NULL, NULL, GET_TOKENS),
-			var_container(NULL, NULL, NULL, GET_TREE));
-		free_env(var_container(NULL, NULL, NULL, GET_MINI));
 		printf("exit\n");
-		exit(0);
+		free_exit(0);
 	}
 	else
-	{
-		if (ft_isstrnum(args[0]))
-		{
-			if (len_args == 1)
-			{
-				exit_value = ft_atoi(args[0]);
-				while (exit_value >= 256)
-					exit_value -= 256;
-				while (exit_value < 0)
-					exit_value += 256;
-				ft_free_all(var_container(NULL, NULL, NULL, GET_TOKENS),
-					var_container(NULL, NULL, NULL, GET_TREE));
-				free_env(var_container(NULL, NULL, NULL, GET_MINI));
-				printf("exit\n");
-				exit(exit_value);
-			}
-			else
-			{
-				printf("exit\nminishell: exit: too many arguments\n");
-				exit_value = ft_atoi(args[0]);
-				return (exit_value);
-			}
-		}
-		else
-		{
-			printf("exit\nminishell: exit: %s: numeric argument required\n",
-				args[0]);
-			free_env(var_container(NULL, NULL, NULL, GET_MINI));
-			ft_free_all(var_container(NULL, NULL, NULL, GET_TOKENS),
-				var_container(NULL, NULL, NULL, GET_TREE));
-			exit (2);
-		}
-	}
+		exit_conditions(args, exit_value, len_args);
 }

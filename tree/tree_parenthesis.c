@@ -6,22 +6,11 @@
 /*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 13:23:37 by mlongo            #+#    #+#             */
-/*   Updated: 2023/11/09 14:57:28 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/10 16:44:55 by abuonomo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	verify_parenthesis(t_token *token_lst)
-{
-	while (token_lst->next && token_lst->token != OPERATOR)
-	{
-		if (token_lst->token == PARENTHESIS)
-			return (1);
-		token_lst = token_lst->next;
-	}
-	return (0);
-}
 
 t_token	*copy_tok_parenthesis(t_token *to_copy)
 {

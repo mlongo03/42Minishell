@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 14:15:02 by fcarlucc          #+#    #+#             */
-/*   Updated: 2023/11/09 15:41:37 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:02:15 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int		check_if_good_for_env(t_declaration *node);
 char	*ft_strndup(char *str, int start, int finish);
 void	change_if_needed_env_ver(t_declaration *node, int pos, t_mini *mini);
 void	concatenation_export(t_declaration *node, int pos, t_mini *mini);
-char	**split_bt_nt_t_mc(char *str, char c);
 int		ft_unset(t_declaration *node, t_mini *mini);
 void	copy_check_unset(char *str, t_mini *mini);
 void	swap_mat(char **str1, char **str2);
-int		ft_exit(char **args);
+void	ft_exit(char **args);
+void	p_error(char *first, char *var, char *second);
 #endif

@@ -1,39 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   other_mini_utils.c                                 :+:      :+:    :+:   */
+/*   redir_paths_cmdargs_dup_2.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/24 21:54:06 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/10 16:38:32 by abuonomo         ###   ########.fr       */
+/*   Created: 2023/11/10 16:19:12 by abuonomo          #+#    #+#             */
+/*   Updated: 2023/11/10 16:19:26 by abuonomo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	swap_mat(char **str1, char **str2)
+void	dup_std_fd(int cur_in_out, int std_in_out)
 {
-	char	*temp;
-
-	temp = *str1;
-	*str1 = *str2;
-	*str2 = temp;
-}
-
-char	*ft_strndup(char *str, int start, int finish)
-{
-	int		i;
-	char	*ret;
-
-	i = 0;
-	ret = ft_calloc((finish - start) + 1, 1);
-	while (start < finish)
+	if (cur_in_out != std_in_out)
 	{
-		ret[i] = str[start];
-		i ++ ;
-		start ++;
+		dup2(cur_in_out, std_in_out);
+		close(cur_in_out);
 	}
-	ret[i] = 0;
-	return (ret);
 }

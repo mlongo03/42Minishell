@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_export_env_add.c                           :+:      :+:    :+:   */
+/*   execve_signal_have_cmdpath_2.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/16 23:38:43 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/09 15:40:57 by abuonomo         ###   ########.fr       */
+/*   Created: 2023/11/10 16:08:47 by abuonomo          #+#    #+#             */
+/*   Updated: 2023/11/10 16:09:00 by abuonomo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	env_adding(char *final_string, char **env)
+int	is_directory(const char *path)
 {
-	size_t	new_size;
+	DIR	*dir;
 
-	new_size = env_rows(env) + 1;
-	env = ft_realloc(env, sizeof(char *), new_size, new_size + 1);
-	env[new_size - 1] = ft_strdup(final_string);
-	env[new_size] = 0;
-}
-
-void	add_export_env(char **env)
-{
-	char	*final_string;
-
-	env_adding(final_string, env);
-	free(final_string);
+	dir = opendir(path);
+	if (dir != NULL)
+	{
+		closedir(dir);
+		return (1);
+	}
+	else
+		return (0);
 }

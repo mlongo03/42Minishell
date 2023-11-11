@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 16:48:20 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/09 15:37:13 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:04:49 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static int	find_equal(char *env)
 
 void	print_export(char **export_matrix)
 {
-	int	i;
-	int	j;
-	int	len;
+	int			i;
+	size_t		j;
+	size_t		len;
 
 	i = -1;
 	while (export_matrix[++i])
@@ -90,9 +90,6 @@ void	sort_and_print_export(char **env)
 
 void	ft_export(t_declaration *node, t_mini *mini)
 {
-	int	conc;
-
-	conc = 0;
 	if (!node)
 		sort_and_print_export(mini->env);
 	else

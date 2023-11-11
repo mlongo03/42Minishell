@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lnicoter <lnicoter@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 16:34:03 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/07 13:28:11 by lnicoter         ###   ########.fr       */
+/*   Updated: 2023/11/11 12:57:42 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ int	ft_cd(char **command_line, t_mini *mini)
 	{
 		if (chdir(command_line[0]))
 		{
-			printf("bash: cd: %s: No such file or directory", command_line[0]);
+			p_error("minishell: cd: ", command_line[0],
+				" : No such file or directory\n");
 			return (1);
 		}
 		update_pwd(mini);

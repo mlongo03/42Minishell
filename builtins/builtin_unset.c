@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 20:16:03 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/09 15:37:06 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:58:33 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ void	copy_check_unset(char *str, t_mini *mini)
 
 int	ft_unset(t_declaration *node, t_mini *mini)
 {
-	int				i;
-
-	i = 0;
 	if (!node)
 		return (0);
 	while (node)

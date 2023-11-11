@@ -1,39 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   other_mini_utils.c                                 :+:      :+:    :+:   */
+/*   tree_parenthesis_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/24 21:54:06 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/10 16:38:32 by abuonomo         ###   ########.fr       */
+/*   Created: 2023/11/10 16:44:44 by abuonomo          #+#    #+#             */
+/*   Updated: 2023/11/10 16:44:57 by abuonomo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	swap_mat(char **str1, char **str2)
+int	verify_parenthesis(t_token *token_lst)
 {
-	char	*temp;
-
-	temp = *str1;
-	*str1 = *str2;
-	*str2 = temp;
-}
-
-char	*ft_strndup(char *str, int start, int finish)
-{
-	int		i;
-	char	*ret;
-
-	i = 0;
-	ret = ft_calloc((finish - start) + 1, 1);
-	while (start < finish)
+	while (token_lst->next && token_lst->token != OPERATOR)
 	{
-		ret[i] = str[start];
-		i ++ ;
-		start ++;
+		if (token_lst->token == PARENTHESIS)
+			return (1);
+		token_lst = token_lst->next;
 	}
-	ret[i] = 0;
-	return (ret);
+	return (0);
 }

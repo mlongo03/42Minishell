@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 19:16:11 by mlongo            #+#    #+#             */
-/*   Updated: 2023/11/09 15:14:23 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:15:49 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,31 @@ static size_t	get_word(const char *s, char c)
 	return (words);
 }
 
+void	skip_quotes(char **s, size_t *len)
+{
+	if (**s == '"')
+	{
+		(*s)++;
+		(*len)++;
+		while (**s && **s != '"')
+		{
+			(*len)++;
+			(*s)++;
+		}
+	}
+	else if (**s == '\'')
+	{
+		(*s)++;
+		(*len)++;
+		while (**s && **s != '\'')
+		{
+			(*len)++;
+			(*s)++;
+		}
+	}
+	++(*s);
+}
+
 char	**ft_split(char *s, char c)
 {
 	char	**str;
@@ -49,29 +74,7 @@ char	**ft_split(char *s, char c)
 		{
 			len = 0;
 			while (*s && *s != c && !(*s >= '\t' && c <= '\r') && ++len)
-			{
-				if (*s == '"')
-				{
-					s++;
-					len++;
-					while (*s && *s != '"')
-					{
-						len++;
-						s++;
-					}
-				}
-				else if (*s == '\'')
-				{
-					s++;
-					len++;
-					while (*s && *s != '\'')
-					{
-						len++;
-						s++;
-					}
-				}
-				++s;
-			}
+				skip_quotes(&s, &len);
 			str[i++] = ft_substr(s - len, 0, len);
 		}
 		else

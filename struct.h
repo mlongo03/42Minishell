@@ -6,18 +6,12 @@
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:41:13 by abuonomo          #+#    #+#             */
-/*   Updated: 2023/11/09 16:22:19 by mlongo           ###   ########.fr       */
+/*   Updated: 2023/11/11 13:46:21 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
-
-typedef struct s_mini
-{
-	char	**env;
-	char	**splitcmd;
-}	t_mini;
 
 typedef enum e_token_enum
 {
@@ -85,5 +79,21 @@ typedef struct s_parenthesis
 	t_token	*redir_list;
 	t_tree	*tree;
 }	t_parenthesis;
+
+typedef struct s_mini
+{
+	char	**env;
+	char	**splitcmd;
+	t_tree	*tree;
+	t_token	*token_list;
+}	t_mini;
+
+typedef struct s_wild_split
+{
+	char	*expanded;
+	char	**split_expanded;
+	int		end;
+	int		end_new;
+}	t_wild_split;
 
 #endif

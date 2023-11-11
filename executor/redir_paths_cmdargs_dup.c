@@ -6,20 +6,11 @@
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 20:20:50 by lnicoter          #+#    #+#             */
-/*   Updated: 2023/11/09 16:35:44 by mlongo           ###   ########.fr       */
+/*   Updated: 2023/11/11 12:58:21 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	dup_std_fd(int cur_in_out, int std_in_out)
-{
-	if (cur_in_out != std_in_out)
-	{
-		dup2(cur_in_out, std_in_out);
-		close(cur_in_out);
-	}
-}
 
 int	ft_is_one_word(char	*input)
 {
@@ -30,7 +21,7 @@ int	ft_is_one_word(char	*input)
 	while (input[i])
 	{
 		if (input[i] == ' ')
-			return 0;
+			return (0);
 		else if (input[i] == '"' || input[i] == '\'')
 		{
 			quote = input[i];
@@ -40,7 +31,7 @@ int	ft_is_one_word(char	*input)
 		if (input[i])
 			i++;
 	}
-	return 1;
+	return (1);
 }
 
 int	execute_redirections_output(t_token *redir_list, int curr_out, t_mini *mini)
@@ -55,17 +46,14 @@ int	execute_redirections_output(t_token *redir_list, int curr_out, t_mini *mini)
 		file_name = expander(mini, file_name);
 		redir_list->value = file_name;
 		if (!ft_is_one_word(file_name))
-		{
-			printf("minishell : ambigous redirection\n");
-			return (1);
-		}
+			return (error_ambigous_redirection());
 		if (redir_list->token == OUT_FILE_TRUNC)
 			curr_out = open(file_name, O_CREAT | O_TRUNC | O_WRONLY, 0777);
 		else if (redir_list->token == OUT_FILE_APPEND)
 			curr_out = open(file_name, O_CREAT | O_APPEND | O_WRONLY, 0777);
 		if (curr_out == -1)
 		{
-			printf("minishell : %s: error creating file\n", file_name);
+			p_error("minishell : ", file_name, ": error creating file\n");
 			return (1);
 		}
 		redir_list = redir_list->next;
@@ -87,14 +75,14 @@ int	execute_redirections_input(t_token *redir_list, int curr_in, t_mini *mini)
 		redir_list->value = file_name;
 		if (!ft_is_one_word(file_name))
 		{
-			printf("minishell : ambigous redirection\n");
+			ft_putstr_fd("minishell : ambigous redirection\n", 2);
 			return (1);
 		}
 		if (redir_list->token == IN_FILE_TRUNC || redir_list->token == HERE_DOC)
 			curr_in = open(file_name, O_RDONLY);
 		if (curr_in == -1)
 		{
-			printf("minishell : %s: No such file or directory\n", file_name);
+			p_error("minishell : ", file_name, "No such file or directory\n");
 			return (1);
 		}
 		redir_list = redir_list->next;

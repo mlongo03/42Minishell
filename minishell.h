@@ -6,7 +6,7 @@
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:53 by mlongo            #+#    #+#             */
-/*   Updated: 2023/11/09 17:59:53 by mlongo           ###   ########.fr       */
+/*   Updated: 2023/11/11 11:47:49 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ void	free_tree(t_tree *tree);
 void	free_tokens(t_token *token_lst);
 void	printTree(t_tree *node, int level, char *message);
 void	free_env(t_mini *mini);
+int		ft_isredirection(char *str);
+void	increment_shlvl(t_mini *mini);
 
 #endif

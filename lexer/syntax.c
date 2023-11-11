@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/09 15:49:50 by abuonomo          #+#    #+#             */
-/*   Updated: 2023/11/09 16:37:34 by mlongo           ###   ########.fr       */
+/*   Created: 2023/11/11 16:15:57 by fcarlucc          #+#    #+#             */
+/*   Updated: 2023/11/11 17:45:26 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,39 +21,16 @@ int	count_syntax(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i + 1] && ((str[i] == '|' && str[i + 1] == '|')
-				|| (str[i] == '&' && str[i + 1] == '&')
-				|| (str[i] == '<' && str[i + 1] == '<')
-				|| (str[i] == '>' && str[i + 1] == '>')))
+		if (str[i + 1] && ((str[i] == '|' && str[i + 1] == '|') \
+		|| (str[i] == '&' && str[i + 1] == '&') \
+		|| (str[i] == '<' && str[i + 1] == '<') \
+		|| (str[i] == '>' && str[i + 1] == '>')))
 			count += 2;
 		else if (ft_strchr("|()<>", str[i]))
 			count += 2;
 		i++;
 	}
 	return (i + count);
-}
-
-char	*fix_white_spaces(char *str)
-{
-	int		i;
-	int		j;
-	char	*res;
-
-	if (!str)
-		return (NULL);
-	i = 0;
-	j = 0;
-	res = malloc(ft_strlen(str) + 1);
-	while (str[i])
-	{
-		if (ft_isspace(str[i]) && ft_isspace(str[i + 1]))
-			i++;
-		else
-			res[j++] = str[i++];
-	}
-	res[j] = 0;
-	free(str);
-	return (res);
 }
 
 char	*fix_syntax(char *str)
@@ -126,13 +103,13 @@ char	*handle_two(char *str, char *res, int *i, int *j)
 
 char	*handle_one(char *str, char *res, int *i, int *j)
 {
-	if ((i != 0 && str[*i - 1] != ' ') && (str[*i + 1] && str[*i + 1] != ' '))
+	if ((*i != 0 && str[*i - 1] != ' ') && (str[*i + 1] && str[*i + 1] != ' '))
 	{
 		res[(*j)++] = ' ';
 		res[(*j)++] = str[(*i)++];
 		res[(*j)++] = ' ';
 	}
-	else if (i != 0 && str[*i - 1] != ' ')
+	else if (*i != 0 && str[*i - 1] != ' ')
 	{
 		res[(*j)++] = ' ';
 		res[(*j)++] = str[(*i)++];

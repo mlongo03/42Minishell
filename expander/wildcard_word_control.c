@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_word_control.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abuonomo <abuonomo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 18:46:42 by abuonomo          #+#    #+#             */
-/*   Updated: 2023/11/08 13:03:22 by abuonomo         ###   ########.fr       */
+/*   Updated: 2023/11/10 18:37:13 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,115 +18,51 @@ int	free_filter_return(char *filter)
 	return (0);
 }
 
-int	filter_word(char *input, char *filename, t_mini *mini)
+int	wildcard_filters(t_filter *filter_struct, int *y, int i, char *input)
 {
-	int		i;
-	int		y;
-	char	*filter;
-
-	i = 0;
-	y = -1;
-	while (input[i])
+	if (!input[i])
 	{
-		i += move_to_wildcard(&input[i]);
-		if (i != 0 && input[i - 1] != '*')
-			filter = expand_strbefore(input, i - 1, mini);
-		else
-		{
-			i++;
-			continue ;
-		}
-		if (!input[i])
-		{
-			if (!word_end_filter(filter, filename, &y))
-				return (free_filter_return(filter));
-		}
-		else if (i != 0 && !check_wildcard_before(input, i - 1))
-		{
-			if (!word_start_filter(filter, filename, &y))
-				return (free_filter_return(filter));
-		}
-		else
-		{
-			if (!word_middle_filter(filter, filename, &y))
-				return (free_filter_return(filter));
-		}
-		if (input[i] == '*')
-			i++;
-		free(filter);
+		if (!word_end_filter(filter_struct->filter, filter_struct->filename, y))
+			return (0);
+	}
+	else if (i != 0 && !check_wildcard_before(input, i - 1))
+	{
+		if (!word_start_filter(filter_struct->filter,
+				filter_struct->filename, y))
+			return (0);
+	}
+	else
+	{
+		if (!word_middle_filter(filter_struct->filter,
+				filter_struct->filename, y))
+			return (0);
 	}
 	return (1);
 }
 
-int	word_end_filter(char *filter, char *filename, int *i)
+int	filter_word(char *input, char *filename, t_mini *mini)
 {
-	int	filename_index;
-	int	filter_index;
+	int			i;
+	int			y;
+	t_filter	filter_struct;
 
-	filename_index = ft_strlen(filename) - 1;
-	filter_index = ft_strlen(filter) - 1;
-	while (filename_index != -1 && filter_index != -1 && filename_index >= *i)
+	i = 0;
+	y = -1;
+	filter_struct.filename = filename;
+	while (input[i])
 	{
-		if (filename[filename_index] != filter[filter_index])
-			return (0);
-		filename_index--;
-		filter_index--;
-	}
-	if (filename_index >= *i || filename_index == -1 || filter_index == -1)
-		return (1);
-	else
-		return (0);
-}
-
-int	word_start_filter(char *filter, char *filename, int *i)
-{
-	int	filename_index;
-	int	filter_index;
-
-	filename_index = 0;
-	filter_index = 0;
-	while (filename[filename_index] && filter[filter_index])
-	{
-		if (filename[filename_index] != filter[filter_index])
-			return (0);
-		filename_index++;
-		filter_index++;
-	}
-	if ((!filename[filename_index] && !filter[filter_index])
-		|| (filename[filename_index] && !filter[filter_index]))
-	{
-		*i = filename_index;
-		return (1);
-	}
-	else
-		return (0);
-}
-
-int	word_middle_filter(char *filter, char *filename, int *i)
-{
-	int	filename_index;
-	int	filter_index;
-
-	filename_index = *i;
-	filter_index = 0;
-	while (filename[filename_index] && filter[filter_index])
-	{
-		while ((filename[filename_index] && filter[filter_index])
-			&& filename[filename_index++] == filter[filter_index++])
+		i += move_to_wildcard(&input[i]);
+		if (i != 0 && input[i - 1] != '*')
 		{
+			filter_struct.filter = expand_strbefore(input, i - 1, mini);
+			if (!wildcard_filters(&filter_struct, &y, i, input))
+				return (free_filter_return(filter_struct.filter));
+			if (input[i] == '*')
+				i++;
+			free(filter_struct.filter);
 		}
-		if (!filter[filter_index])
-			break ;
 		else
-			filter_index = 0;
-		filename_index++;
+			i++;
 	}
-	if ((!filename[filename_index] && !filter[filter_index])
-		|| (filename[filename_index] && !filter[filter_index]))
-	{
-		*i = filename_index;
-		return (1);
-	}
-	else
-		return (0);
+	return (1);
 }
