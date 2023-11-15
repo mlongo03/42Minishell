@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_support.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fcarlucc <fcarlucc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlongo <mlongo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 16:29:55 by fcarlucc          #+#    #+#             */
-/*   Updated: 2023/11/11 16:36:14 by fcarlucc         ###   ########.fr       */
+/*   Updated: 2023/11/15 10:48:36 by mlongo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ char	*fix_white_spaces(char *str)
 	res = malloc(ft_strlen(str) + 1);
 	while (str[i])
 	{
-		if (ft_isspace(str[i]) && ft_isspace(str[i + 1]))
+		if (str[i] == '"' || str[i] == '\'')
+			handle_quotes(str, res, &i, &j);
+		else if (ft_isspace(str[i]) && ft_isspace(str[i + 1]))
 			i++;
 		else
 			res[j++] = str[i++];
